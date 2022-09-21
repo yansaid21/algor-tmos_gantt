@@ -96,8 +96,6 @@ gantt.set_yticklabels(procesos)
 def agregar_tarea(t0, duracion, proceso, nombre):
   # Índice de la máquina:
   index_proceso = procesos.index(proceso)
-  print("procesooo")
-  print(procesos[index_proceso])
   # Posición de la barra:
   gantt.broken_barh([(t0, duracion)], (altura_barras*index_proceso, altura_barras), facecolors=("g"))
   # Posición del texto:
@@ -105,9 +103,10 @@ def agregar_tarea(t0, duracion, proceso, nombre):
 
 agregar_tarea(0, lista[0]["Duracion_proceso"],lista[0]["Nombre_proceso"],lista[0]["Nombre_proceso"])
 suma = 0
-indice = 1
-for indice in range (N):
-  suma += lista[i]["Duracion_proceso"]
-  agregar_tarea(suma, lista[indice]["Duracion_proceso"], lista[indice]["Nombre_proceso"],lista[indice]["Nombre_proceso"])
-  print(lista[indice]["Nombre_proceso"])
+for i in range (1, N): #es decir que arranca desde la posicion 1 y va hasta N
+  suma += lista[i-1]["Duracion_proceso"]
+  print("------")
+  print(lista[i]["Duracion_proceso"])
+  agregar_tarea(suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"])
+ 
 plt.show()
