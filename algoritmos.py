@@ -6,6 +6,7 @@ lista=[]
 TE= 0 #Tiempo espera de cada proceso
 TR = 0 #Tiempo respuesta de cada proceso
 lista_prioridad = []
+lista_duracion = []
 
 while True:
     try:
@@ -23,22 +24,41 @@ for i in range (1 , N+1) :
     except ValueError:
       print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
   P = input(f"ingrese prioridad del proceso {i} \n >> ")
+  
   dic = {"Nombre_proceso" : NP,
        "Duracion_proceso" : DP,
        "Prioridad_proceso" : P}
+  lista_duracion.append(DP)
   lista_prioridad.append(P)
   lista.append(dic)
+  
+
 
 while True:
     try:
-      int(input("ingrese Q \n >> "))
+      Q = int(input("ingrese Q \n >> "))
       break
     except ValueError:
       print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
 
 print(lista)
 print(lista[0]["Nombre_proceso"]) #INGRESAR AL NOMBRE DEL PROCESO EN LOS DICCIONARIOS
-
+def primero_mas_corto(lista_duracion, lista):
+      indice = 0
+      max_value = max(lista_duracion)
+      for i in range (len(lista_duracion)):
+          if lista_duracion[i] < max_value:
+                indice = i
+                max_value = lista_duracion[i]
+      dic_aux = lista[indice]
+      lista.pop(indice)
+      respuesta = []
+      respuesta.append(dic_aux)
+      
+      for i in range(len(lista)):
+            respuesta.append(lista[i])
+      return (respuesta)
+            
 #TIEMPOS
 #TR tiempo desarrollo
 def tiempo_respuesta(lista):
@@ -134,6 +154,11 @@ def mostrar_diagrama(lista, nombre_diagrama):
 
   plt.show()
   
-mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
+#mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
 tiempo_espera(lista)
 tiempo_respuesta(lista)
+
+algoritmo2 = primero_mas_corto(lista_duracion,lista)
+mostrar_diagrama(algoritmo2, "SJF (PRIMERO EL MÁS CORTO)")
+tiempo_espera(algoritmo2)
+tiempo_respuesta(algoritmo2)
