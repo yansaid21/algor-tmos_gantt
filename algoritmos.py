@@ -14,7 +14,7 @@ while True:
     except ValueError:
         print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
 
-for i in range (N) :
+for i in range (1 , N+1) :
   NP= input(f"ingrese nombre proceso {i} \n >> ")
   while True:
     try:
@@ -40,60 +40,82 @@ print(lista)
 print(lista[0]["Nombre_proceso"]) #INGRESAR AL NOMBRE DEL PROCESO EN LOS DICCIONARIOS
 
 #TIEMPOS
-suma =0
-total = 0
-for i in range (N):
-  suma += lista[i]["Duracion_proceso"]
-  total += suma
-TR = total/N
-print("TIEMPO DE RESPUESTA")
-print(TR)
-#TE tiempo de desarrollo
-suma = 0
-total = 0
-for i in range (N-1):
-  suma += lista[i]["Duracion_proceso"]
-  total += suma
-TE = total/N
-print("TIEMPO DE ESPERA")
-print(TE)
+#TR tiempo desarrollo
+def tiempo_respuesta(lista):
+  suma = 0
+  total = 0
+  for i in range (N):
+    suma += lista[i]["Duracion_proceso"]
+    total += suma
+  TR = total/N
+  print("TIEMPO DE RESPUESTA")
+  print(TR)
+#TE tiempo de espera
+def tiempo_espera(lista):
+  suma = 0
+  total = 0
+  for i in range (N-1):
+    suma += lista[i]["Duracion_proceso"]
+    total += suma
+  TE = total/N
+  print("TIEMPO DE ESPERA")
+  print(TE)
 
 #primer diagrama de gant
-altura_barras = 10
-tticks = 10
-procesos = []
-rango_horizontal = 0
-for i in range (N):
-  procesos.append(lista[i]["Nombre_proceso"]) #obtener solo el nombre de los procesos
-  rango_horizontal += lista[i]["Duracion_proceso"] #obtener la duración de cada proceso y sumarlo para encontrar hasta donde se extienden las x
-      
-print(procesos)
+def crear_diagrama_vacio(lista, nombre_diagrama):
+  altura_barras = 10 #hbr
+  tticks = 10
+  procesos = [] #maquinas
+  rango_horizontal = 0 #ht
+  
+  for i in range (N):
+    procesos.append(lista[i]["Nombre_proceso"]) #obtener solo el nombre de los procesos
+    rango_horizontal += lista[i]["Duracion_proceso"] #obtener la duración de cada proceso y sumarlo para encontrar hasta donde se extienden las x
+  
+  print(procesos)
 
-# Creación de los objetos del plot:
-fig, gantt = plt.subplots()
+  # Creación de los objetos del plot:
+  fig, gantt = plt.subplots()
+  
+  diagrama_dict = {"fig": fig,
+                   "ax": gantt,
+                   "altura_barras": altura_barras,
+                   "tticks": tticks,
+                   "procesos": procesos,
+                   "rango_horizontal": rango_horizontal} 
 
-# Etiquetas de los ejes:
-gantt.set_xlabel("Duración")
-gantt.set_ylabel("Procesos")
+  gantt.set_title(nombre_diagrama)
+  # Etiquetas de los ejes:
+  gantt.set_xlabel("Duración")
+  gantt.set_ylabel("Procesos")
 
-# Límites de los ejes:
-gantt.set_xlim(0, rango_horizontal)
-gantt.set_ylim(0, N*altura_barras)
+  # Límites de los ejes:
+  gantt.set_xlim(0, rango_horizontal)
+  gantt.set_ylim(0, N*altura_barras)
 
-# Divisiones de eje x
-gantt.grid(True, axis="x")
+  # Divisiones de eje x
+  gantt.grid(True, axis="x")
 
-# Divisiones del eje y
-gantt.set_yticks(range(altura_barras, N*altura_barras, altura_barras), minor=True)
-gantt.grid(True, axis='y', which='minor')
+  # Divisiones del eje y
+  gantt.set_yticks(range(altura_barras, N*altura_barras, altura_barras), minor=True)
+  gantt.grid(True, axis='y', which='minor')
 
-# Etiquetas de máquinas:
-gantt.set_yticks(np.arange(altura_barras/2, altura_barras*N - altura_barras/2 + altura_barras, altura_barras))
-gantt.set_yticklabels(procesos)
+  # Etiquetas de máquinas:
+  gantt.set_yticks(np.arange(altura_barras/2, altura_barras*N - altura_barras/2 + altura_barras, altura_barras))
+  gantt.set_yticklabels(procesos)
+  return diagrama_dict
+''' 
+"g" = green -> color verde para todos los procesos del algoritmo 1
+t0 = donde inicia el proceso 
+d = duración de cada proceso, es decir, hasta donde va el proceso
+map = proceso = nombre del proceso 
+ '''
 
-# "g" = green -> color verde para todos los procesos del algoritmo 1
-# t0 = donde inicia el proceso
-def agregar_tarea(t0, duracion, proceso, nombre):
+def agregar_tarea(diagrama, t0, duracion, proceso, nombre):
+  #recuperar variables del diagrama 
+  procesos = diagrama["procesos"]
+  altura_barras = diagrama["altura_barras"]
+  gantt = diagrama["ax"]
   # Índice de la máquina:
   index_proceso = procesos.index(proceso)
   # Posición de la barra:
@@ -101,12 +123,17 @@ def agregar_tarea(t0, duracion, proceso, nombre):
   # Posición del texto:
   gantt.text(x=(t0 + duracion/2), y=(altura_barras*index_proceso + altura_barras/2), s=f"{nombre} ({duracion})", va='center', color='white')
 
-agregar_tarea(0, lista[0]["Duracion_proceso"],lista[0]["Nombre_proceso"],lista[0]["Nombre_proceso"])
-suma = 0
-for i in range (1, N): #es decir que arranca desde la posicion 1 y va hasta N
-  suma += lista[i-1]["Duracion_proceso"]
-  print("------")
-  print(lista[i]["Duracion_proceso"])
-  agregar_tarea(suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"])
- 
-plt.show()
+def mostrar_diagrama(lista, nombre_diagrama):
+  diagrama = crear_diagrama_vacio(lista, nombre_diagrama)
+  '''Todos los procesos comienzan en 0, por tal motivo primero se agrega el primer proceso de la lista en t0 = 0'''
+  agregar_tarea(diagrama, 0, lista[0]["Duracion_proceso"],lista[0]["Nombre_proceso"],lista[0]["Nombre_proceso"])
+  suma = 0
+  for i in range (1, N): #es decir que arranca desde la posicion 1 y va hasta N
+    suma += lista[i-1]["Duracion_proceso"]
+    agregar_tarea(diagrama, suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"])
+
+  plt.show()
+  
+mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
+tiempo_espera(lista)
+tiempo_respuesta(lista)
