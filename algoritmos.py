@@ -41,23 +41,35 @@ while True:
     except ValueError:
       print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
 
-print(lista)
-print(lista[0]["Nombre_proceso"]) #INGRESAR AL NOMBRE DEL PROCESO EN LOS DICCIONARIOS
+################print(lista)
+#print(lista[0]["Nombre_proceso"]) #INGRESAR AL NOMBRE DEL PROCESO EN LOS DICCIONARIOS
+
+#primero el más corto
 def primero_mas_corto(lista_duracion, lista):
       indice = 0
+      nueva_lista=lista.copy()
       max_value = max(lista_duracion)
       for i in range (len(lista_duracion)):
           if lista_duracion[i] < max_value:
                 indice = i
                 max_value = lista_duracion[i]
-      dic_aux = lista[indice]
-      lista.pop(indice)
+      dic_aux = nueva_lista[indice]
+      nueva_lista.pop(indice)
       respuesta = []
       respuesta.append(dic_aux)
       
-      for i in range(len(lista)):
-            respuesta.append(lista[i])
+      for i in range(len(nueva_lista)):
+            respuesta.append(nueva_lista[i])
       return (respuesta)
+    
+#función de prioridades
+def prioridades_metod(lista_prioridad,lista):
+      lista_aux=[]
+      list.insert
+      for i in range (N):
+            lista_aux.insert(int(lista_prioridad[i])-1,lista[i])
+            print (lista_aux)
+      return (lista_aux)
             
 #TIEMPOS
 #TR tiempo desarrollo
@@ -159,6 +171,9 @@ tiempo_espera(lista)
 tiempo_respuesta(lista)
 
 algoritmo2 = primero_mas_corto(lista_duracion,lista)
-mostrar_diagrama(algoritmo2, "SJF (PRIMERO EL MÁS CORTO)")
+#mostrar_diagrama(algoritmo2, "SJF (PRIMERO EL MÁS CORTO)")
 tiempo_espera(algoritmo2)
 tiempo_respuesta(algoritmo2)
+#prioridades
+algoritmo3=prioridades_metod(lista_prioridad,lista)
+mostrar_diagrama(algoritmo3, "no se (prioridad)")
