@@ -154,7 +154,7 @@ def mostrar_diagrama(lista, nombre_diagrama):
 
   plt.show()
   
-#mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
+mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
 tiempo_espera(lista)
 tiempo_respuesta(lista)
 
