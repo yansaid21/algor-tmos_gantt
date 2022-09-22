@@ -23,7 +23,7 @@ for i in range (1 , N+1) :
       break
     except ValueError:
       print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
-  P = input(f"ingrese prioridad del proceso {i} \n >> ")
+  P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
   
   dic = {"Nombre_proceso" : NP,
        "Duracion_proceso" : DP,
@@ -65,9 +65,8 @@ def primero_mas_corto(lista_duracion, lista):
 #función de prioridades
 def prioridades_metod(lista_prioridad,lista):
       lista_aux=[]
-      list.insert
       for i in range (N):
-            lista_aux.insert(int(lista_prioridad[i])-1,lista[i])
+            lista_aux.insert(lista_prioridad[i]-1,lista[i])
             print (lista_aux)
       return (lista_aux)
             
