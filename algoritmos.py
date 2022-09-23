@@ -45,7 +45,7 @@ while True:
 #print(lista[0]["Nombre_proceso"]) #INGRESAR AL NOMBRE DEL PROCESO EN LOS DICCIONARIOS
 
 #primero el más corto
-def primero_mas_corto(lista_duracion, lista):
+def primero_mas_corto(lista_duracion):
       indice = 0
       nueva_lista=lista.copy()
       max_value = max(lista_duracion)
@@ -63,12 +63,35 @@ def primero_mas_corto(lista_duracion, lista):
       return (respuesta)
     
 #función de prioridades
-def prioridades_metod(lista_prioridad,lista):
+def prioridades_metod(lista_prioridad):
       lista_aux=[]
       for i in range (N):
             lista_aux.insert(lista_prioridad[i]-1,lista[i])
             print (lista_aux)
       return (lista_aux)
+            
+#función round robin
+def round_robin():
+  lista_aux=[]
+  for x in range (N):
+    lista_aux.append(lista[x])
+  lista_vacia=[]
+  lista_respuesta=lista_aux.copy()
+  acum=[]
+  for i in range (N):
+    lista_respuesta[i]["Duracion_proceso"]=Q
+    acum.append(int(lista_aux[i]["Duracion_proceso"]/Q))
+    print("este entra en acum:")
+    print(lista_aux[i]["Duracion_proceso"]/Q)
+    for i in range (len(acum)):
+      k=i
+      for j in range(acum[i]):
+        lista_vacia.insert(k,lista_respuesta[j])
+        k+=1
+  print("-------------------------- proceso con q")
+  print(lista_vacia)
+                  
+  #duracion proceso - Q*acum[i]    
             
 #TIEMPOS
 #TR tiempo desarrollo
@@ -164,15 +187,28 @@ def mostrar_diagrama(lista, nombre_diagrama):
     agregar_tarea(diagrama, suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"])
 
   plt.show()
+
   
 mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
 tiempo_espera(lista)
 tiempo_respuesta(lista)
 
-algoritmo2 = primero_mas_corto(lista_duracion,lista)
+algoritmo2 = primero_mas_corto(lista_duracion)
 mostrar_diagrama(algoritmo2, "SJF (PRIMERO EL MÁS CORTO)")
 tiempo_espera(algoritmo2)
 tiempo_respuesta(algoritmo2)
 #prioridades
 algoritmo3=prioridades_metod(lista_prioridad,lista)
 mostrar_diagrama(algoritmo3, "Planificación basada en prioridades")
+
+print()
+#mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
+tiempo_espera(lista)
+tiempo_respuesta(lista)
+
+
+#prioridades
+algoritmo3=prioridades_metod(lista_prioridad)
+#mostrar_diagrama(algoritmo3, "no se (prioridad)")
+algoritmo4=round_robin()
+
