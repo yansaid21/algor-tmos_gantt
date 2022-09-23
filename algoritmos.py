@@ -170,9 +170,9 @@ tiempo_espera(lista)
 tiempo_respuesta(lista)
 
 algoritmo2 = primero_mas_corto(lista_duracion,lista)
-#mostrar_diagrama(algoritmo2, "SJF (PRIMERO EL MÁS CORTO)")
+mostrar_diagrama(algoritmo2, "SJF (PRIMERO EL MÁS CORTO)")
 tiempo_espera(algoritmo2)
 tiempo_respuesta(algoritmo2)
 #prioridades
 algoritmo3=prioridades_metod(lista_prioridad,lista)
-mostrar_diagrama(algoritmo3, "no se (prioridad)")
+mostrar_diagrama(algoritmo3, "Planificación basada en prioridades")
