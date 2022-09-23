@@ -100,8 +100,11 @@ def round_robin():
     k=i  
     for j in range(acum[i]):
       lista_vacia.insert(k,lista_respuesta[i])
-      if (k == acum[i]-1 and Residuo[i] != 0) : 
-        lista_vacia.pop(k)
+      if (j == acum[i]-1 and Residuo[i] != 0) :
+        if(k<len(lista_vacia)):
+          lista_vacia.pop(k)
+        else:
+          lista_vacia.pop()
         duracion_Residuo= (int(Q*lista_cociente[i])-(Q*(acum[i]-1)))
         dic_auxiliar={
           "Nombre_proceso": lista_vacia[i]["Nombre_proceso"],
