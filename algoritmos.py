@@ -74,6 +74,7 @@ def prioridades_metod(lista_prioridad):
             
 #función round robin
 def round_robin():
+  lista_cociente=[]
   lista_aux=[]
   for x in range (N):
     lista_aux.append(lista[x])
@@ -85,7 +86,7 @@ def round_robin():
     
     #acum.append(int(lista_aux[i]["Duracion_proceso"]/Q))
     print("este entra en acum:")
-    print(lista_aux[i]["Duracion_proceso"]/Q)
+    lista_cociente.append(lista_aux[i]["Duracion_proceso"]/Q)
   for y in range(N):
         lista_respuesta[y]["Duracion_proceso"] = Q
   
@@ -96,8 +97,9 @@ def round_robin():
       k += i+1
   print("-------------------------- proceso con q")
   print(lista_vacia)
-                  
-  #duracion proceso - Q*acum[i]    
+  for i in range (len(acum)):
+    if ((acum[i] - lista_cociente[i]) != 0) :
+      Residuo_proceso = - Q*acum[i]    
             
 #TIEMPOS
 #TR tiempo desarrollo
