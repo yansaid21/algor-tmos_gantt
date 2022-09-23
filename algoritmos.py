@@ -66,9 +66,11 @@ def primero_mas_corto(lista_duracion):
     
 #función de prioridades
 def prioridades_metod(lista_prioridad):
-      lista_aux=[]
+      lista_aux=lista.copy()
       for i in range (N):
+            lista_aux.pop(lista_prioridad[i]-1)
             lista_aux.insert(lista_prioridad[i]-1,lista[i])
+            print("------ pprioridad lista")
             print (lista_aux)
       return (lista_aux)
             
@@ -76,6 +78,7 @@ def prioridades_metod(lista_prioridad):
 def round_robin():
   lista_cociente=[]
   lista_aux=[]
+  Residuo=[]
   for x in range (N):
     lista_aux.append(lista[x])
   lista_vacia=[]
@@ -89,17 +92,28 @@ def round_robin():
     lista_cociente.append(lista_aux[i]["Duracion_proceso"]/Q)
   for y in range(N):
         lista_respuesta[y]["Duracion_proceso"] = Q
-  
+  for i in range (len(acum)):
+    Residuo.append(lista_cociente[i]-acum[i])
+    if (Residuo[i] != 0) :
+      acum[i]+=1   
   for i in range (len(acum)):
     k=i  
     for j in range(acum[i]):
       lista_vacia.insert(k,lista_respuesta[i])
+      if (k == acum[i]-1 and Residuo[i] != 0) : 
+        lista_vacia.pop(k)
+        duracion_Residuo= (int(Q*lista_cociente[i])-(Q*(acum[i]-1)))
+        dic_auxiliar={
+          "Nombre_proceso": lista_vacia[i]["Nombre_proceso"],
+          "Duracion_proceso" : duracion_Residuo,
+       "Prioridad_proceso" : lista_vacia[i]["Prioridad_proceso"]
+        }
+        lista_vacia.insert(k,dic_auxiliar)
       k += i+1
+   
   print("-------------------------- proceso con q")
   print(lista_vacia)
-  for i in range (len(acum)):
-    if ((acum[i] - lista_cociente[i]) != 0) :
-      Residuo_proceso = - Q*acum[i]    
+  return (lista_vacia)
             
 #TIEMPOS
 #TR tiempo desarrollo
@@ -130,10 +144,10 @@ def crear_diagrama_vacio(lista, nombre_diagrama):
   procesos = [] #maquinas
   rango_horizontal = 0 #ht
   
-  for i in range (N):
+  for i in range (len(lista)):
     procesos.append(lista[i]["Nombre_proceso"]) #obtener solo el nombre de los procesos
     rango_horizontal += lista[i]["Duracion_proceso"] #obtener la duración de cada proceso y sumarlo para encontrar hasta donde se extienden las x
-  
+  print("------- procesos")
   print(procesos)
 
   # Creación de los objetos del plot:
@@ -153,17 +167,17 @@ def crear_diagrama_vacio(lista, nombre_diagrama):
 
   # Límites de los ejes:
   gantt.set_xlim(0, rango_horizontal)
-  gantt.set_ylim(0, N*altura_barras)
+  gantt.set_ylim(0, len(lista)*altura_barras)
 
   # Divisiones de eje x
   gantt.grid(True, axis="x")
 
   # Divisiones del eje y
-  gantt.set_yticks(range(altura_barras, N*altura_barras, altura_barras), minor=True)
+  gantt.set_yticks(range(altura_barras, len(lista)*altura_barras, altura_barras), minor=True)
   gantt.grid(True, axis='y', which='minor')
 
   # Etiquetas de máquinas:
-  gantt.set_yticks(np.arange(altura_barras/2, altura_barras*N - altura_barras/2 + altura_barras, altura_barras))
+  gantt.set_yticks(np.arange(altura_barras/2, altura_barras*(len(lista)) - altura_barras/2 + altura_barras, altura_barras))
   gantt.set_yticklabels(procesos)
   return diagrama_dict
 ''' 
@@ -173,30 +187,34 @@ d = duración de cada proceso, es decir, hasta donde va el proceso
 map = proceso = nombre del proceso 
  '''
 
-def agregar_tarea(diagrama, t0, duracion, proceso, nombre):
+def agregar_tarea(diagrama, t0, duracion, proceso, nombre,indice):
+  lista_numeros=[]
   #recuperar variables del diagrama 
   procesos = diagrama["procesos"]
   altura_barras = diagrama["altura_barras"]
   gantt = diagrama["ax"]
   # Índice de la máquina:
-  index_proceso = procesos.index(proceso)
+  #index_proceso = procesos.index(proceso)
+  for i in range(len(procesos)):
+    lista_numeros.append(i)
+        
   # Posición de la barra:
-  gantt.broken_barh([(t0, duracion)], (altura_barras*index_proceso, altura_barras), facecolors=("g"))
+  gantt.broken_barh([(t0, duracion)], (altura_barras*lista_numeros[indice], altura_barras), facecolors=("g"))
   # Posición del texto:
-  gantt.text(x=(t0 + duracion/2), y=(altura_barras*index_proceso + altura_barras/2), s=f"{nombre} ({duracion})", va='center', color='white')
+  gantt.text(x=(t0 + duracion/2), y=(altura_barras*lista_numeros[indice] + altura_barras/2), s=f"{nombre} ({duracion})", va='center', color='white')
 
 def mostrar_diagrama(lista, nombre_diagrama):
   diagrama = crear_diagrama_vacio(lista, nombre_diagrama)
   '''Todos los procesos comienzan en 0, por tal motivo primero se agrega el primer proceso de la lista en t0 = 0'''
-  agregar_tarea(diagrama, 0, lista[0]["Duracion_proceso"],lista[0]["Nombre_proceso"],lista[0]["Nombre_proceso"])
+  agregar_tarea(diagrama, 0, lista[0]["Duracion_proceso"],lista[0]["Nombre_proceso"],lista[0]["Nombre_proceso"],0)
   suma = 0
-  for i in range (1, N): #es decir que arranca desde la posicion 1 y va hasta N
+  for i in range (1, len(lista)): #es decir que arranca desde la posicion 1 y va hasta N
     suma += lista[i-1]["Duracion_proceso"]
-    agregar_tarea(diagrama, suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"])
+    agregar_tarea(diagrama, suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"],i)
 
   plt.show()
 
-''' 
+
 mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
 tiempo_espera(lista)
 tiempo_respuesta(lista)
@@ -210,8 +228,9 @@ tiempo_respuesta(algoritmo2)
 algoritmo3=prioridades_metod(lista_prioridad)
 mostrar_diagrama(algoritmo3, "Planificación basada en prioridades")
 tiempo_espera(algoritmo3)
-tiempo_respuesta(algoritmo3) '''
+tiempo_respuesta(algoritmo3) 
 
 algoritmo4=round_robin()
+mostrar_diagrama(algoritmo4,"Round Robin")
 
 
