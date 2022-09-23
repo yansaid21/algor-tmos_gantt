@@ -88,11 +88,12 @@ def round_robin():
     print(lista_aux[i]["Duracion_proceso"]/Q)
   for y in range(N):
         lista_respuesta[y]["Duracion_proceso"] = Q
-  k = 1
+  
   for i in range (len(acum)):
+    k=i  
     for j in range(acum[i]):
       lista_vacia.insert(k,lista_respuesta[i])
-      k += i
+      k += i+1
   print("-------------------------- proceso con q")
   print(lista_vacia)
                   
