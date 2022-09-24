@@ -23,8 +23,17 @@ for i in range (1 , N+1) :
       break
     except ValueError:
       print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
-  P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
-  
+      
+  while True:
+    try:
+      P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
+      while(P<1 or P>N):   
+        print("INGRESE UN VALOR DENTRO DEL RANGO \n>> ")
+        P= int(input(f"ingrese prioridad del proceso {i} \n >> "))
+      break
+    except ValueError:
+      print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
+      
   dic = {"Nombre_proceso" : NP,
        "Duracion_proceso" : DP,
        "Prioridad_proceso" : P}
