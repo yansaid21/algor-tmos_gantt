@@ -25,7 +25,17 @@ for i in range (1 , N+1) :
       break
     except ValueError:
       print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
-  #P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
+      
+  while True:
+    try:
+      P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
+      while(P<1 or P>N):   
+        print("INGRESE UN VALOR DENTRO DEL RANGO \n>> ")
+        P= int(input(f"ingrese prioridad del proceso {i} \n >> "))
+      break
+    except ValueError:
+      print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
+      
   dic = {"Nombre_proceso" : NP,
        "Duracion_proceso" : DP,
        "Prioridad_proceso" : P}
@@ -108,9 +118,9 @@ def round_robin():
           lista_vacia.pop()
         duracion_Residuo= (int(Q*lista_cociente[i])-(Q*(acum[i]-1)))
         dic_auxiliar={
-          "Nombre_proceso": lista_vacia[i]["Nombre_proceso"],
+          "Nombre_proceso": lista_respuesta[i]["Nombre_proceso"],
           "Duracion_proceso" : duracion_Residuo,
-       "Prioridad_proceso" : lista_vacia[i]["Prioridad_proceso"]
+       "Prioridad_proceso" : lista_respuesta[i]["Prioridad_proceso"]
         }
         lista_vacia.insert(k,dic_auxiliar)
       k += i+1
