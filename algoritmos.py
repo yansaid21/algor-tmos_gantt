@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-#inst_miError = miError()
 
 print ("ingrese la cantidad de procesos a realizar")
 lista=[]
@@ -81,8 +80,6 @@ def prioridades_metod(lista_prioridad):
       for i in range (N):
             lista_aux.pop(lista_prioridad[i]-1)
             lista_aux.insert(lista_prioridad[i]-1,lista[i])
-            print("------ pprioridad lista")
-            print (lista_aux)
       return (lista_aux)
             
 #función round robin
@@ -99,7 +96,6 @@ def round_robin():
     acum.append(int(lista_aux[i]["Duracion_proceso"]/Q))
     
     #acum.append(int(lista_aux[i]["Duracion_proceso"]/Q))
-    print("este entra en acum:")
     lista_cociente.append(lista_aux[i]["Duracion_proceso"]/Q)
   for y in range(N):
         lista_respuesta[y]["Duracion_proceso"] = Q
@@ -125,8 +121,6 @@ def round_robin():
         lista_vacia.insert(k,dic_auxiliar)
       k += i+1
    
-  print("-------------------------- proceso con q")
-  print(lista_vacia)
   return (lista_vacia)
             
 #TIEMPOS
@@ -161,8 +155,6 @@ def crear_diagrama_vacio(lista, nombre_diagrama):
   for i in range (len(lista)):
     procesos.append(lista[i]["Nombre_proceso"]) #obtener solo el nombre de los procesos
     rango_horizontal += lista[i]["Duracion_proceso"] #obtener la duración de cada proceso y sumarlo para encontrar hasta donde se extienden las x
-  print("------- procesos")
-  print(procesos)
 
   # Creación de los objetos del plot:
   fig, gantt = plt.subplots()
@@ -228,23 +220,28 @@ def mostrar_diagrama(lista, nombre_diagrama):
 
   plt.show()
 
-
+print("-----------------------------------------TIEMPOS DE ALGORITMO FCFS (ORDEN DE LLEGADA)-----------------------------------------")
 mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
 tiempo_espera(lista)
 tiempo_respuesta(lista)
 
+print("-----------------------------------------TIEMPOS DE ALGORITMO SJF (PRIMERO EL MÁS CORTO)--------------------------------------")
 algoritmo2 = primero_mas_corto(lista_duracion)
 mostrar_diagrama(algoritmo2, "SJF (PRIMERO EL MÁS CORTO)")
 tiempo_espera(algoritmo2)
 tiempo_respuesta(algoritmo2)
 
 #prioridades
+print("-----------------------------------------TIEMPOS DE ALGORITMO PLANIFICACIÓN BASADA EN PRIORIDADES-----------------------------")
 algoritmo3=prioridades_metod(lista_prioridad)
 mostrar_diagrama(algoritmo3, "Planificación basada en prioridades")
 tiempo_espera(algoritmo3)
 tiempo_respuesta(algoritmo3) 
 
+print("-----------------------------------------TIEMPOS DE ALGORITMO ROUND ROBIN(TURNO ROTATIVO)-------------------------------------")
 algoritmo4=round_robin()
-mostrar_diagrama(algoritmo4,"Round Robin")
+mostrar_diagrama(algoritmo4,"Round-Robin")
+tiempo_espera(algoritmo4)
+tiempo_respuesta(algoritmo4)
 
 
