@@ -1,6 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+'''class miError(Exception):
+      def __init__(self):
+        def error(self, value, N):
+            if value < 0 and value > N:
+             print(f"Fuera de rango")'''
+
+#inst_miError = miError()
+
 print ("ingrese la cantidad de procesos a realizar")
 lista=[]
 TE= 0 #Tiempo espera de cada proceso
@@ -20,11 +28,13 @@ for i in range (1 , N+1) :
   while True:
     try:
       DP= int(input(f"ingrese duración proceso {i} \n >> "))
+      P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
       break
     except ValueError:
       print("     !!! VALOR INVÁLIDO, INGRESE UN NÚMERO !!! ")
-  P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
-  
+    '''except inst_miError.error(P,N):
+      print("     ¡¡¡ EL VALOR EXCEDE EL NÚMERO DE PROCESOS INGRESADO !!! ")'''
+  #P = int(input(f"ingrese prioridad del proceso {i} \n >> "))
   dic = {"Nombre_proceso" : NP,
        "Duracion_proceso" : DP,
        "Prioridad_proceso" : P}
