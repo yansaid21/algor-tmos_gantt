@@ -205,14 +205,24 @@ def agregar_tarea(diagrama, t0, duracion, proceso, nombre,indice):
   # Índice de la máquina:
   #index_proceso = procesos.index(proceso)
   for i in range(len(procesos)):
-    lista_numeros.append(i)
-        
+    lista_numeros.append(i)    
   # Posición de la barra:
   gantt.broken_barh([(t0, duracion)], (altura_barras*lista_numeros[indice], altura_barras), facecolors=("g"))
   # Posición del texto:
   gantt.text(x=(t0 + duracion/2), y=(altura_barras*lista_numeros[indice] + altura_barras/2), s=f"{nombre} ({duracion})", va='center', color='white')
 
 def mostrar_diagrama(lista, nombre_diagrama):
+  diagrama = crear_diagrama_vacio(lista, nombre_diagrama)
+  '''Todos los procesos comienzan en 0, por tal motivo primero se agrega el primer proceso de la lista en t0 = 0'''
+  agregar_tarea(diagrama, 0, lista[0]["Duracion_proceso"],lista[0]["Nombre_proceso"],lista[0]["Nombre_proceso"],0)
+  suma = 0
+  for i in range (1, len(lista)): #es decir que arranca desde la posicion 1 y va hasta N
+    suma += lista[i-1]["Duracion_proceso"]
+    agregar_tarea(diagrama, suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"],i)
+
+  plt.show()
+
+def mostrar_diagramaRobin(lista, nombre_diagrama):
   suma_doble_aux=0
   suma_aux=0
   SoloRoundRobinDic={}
@@ -242,7 +252,6 @@ def mostrar_diagrama(lista, nombre_diagrama):
     agregar_tarea(diagrama, suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"],i)
 
   plt.show()
-  
 def tiempoRespuestaRogbinhood():
   banderita=False
   sumatoria=0
@@ -257,7 +266,8 @@ def tiempoRespuestaRogbinhood():
             banderita=True
       i+=1
   total=sumatoria/N
-  return total
+  print ("TIEMPO RESPUESTA")
+  print(total)
       
 def TiempoEsperaRoundRobin():
   bandera=False
@@ -265,7 +275,6 @@ def TiempoEsperaRoundRobin():
   suma=0
   for i in range (N):
     bandera=False
-    #for j in range (len(Tiempos_Iniciales)):
     j=i
     for x in range (len(SoloRoundRobinList)):
       if(SoloRoundRobinList[j]["nombre"] == lista_proceso[i] and Tiempos_Iniciales[x]["nombre"] == lista_proceso[i] and bandera==True):
@@ -277,12 +286,10 @@ def TiempoEsperaRoundRobin():
         suma += Tiempos_Iniciales[x]["tiempo_inicial"]
         bandera=True
   total=suma/N
-  print("totallllitsimo------")
-  print("Tiempo d")
-  print(total)
-  return (total)    
+  print("TIEMPO DE ESPERA")
+  print(total)    
 
-'''print("-----------------------------------------TIEMPOS DE ALGORITMO FCFS (ORDEN DE LLEGADA)-----------------------------------------")
+print("-----------------------------------------TIEMPOS DE ALGORITMO FCFS (ORDEN DE LLEGADA)-----------------------------------------")
 mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
 tiempo_espera(lista)
 tiempo_respuesta(lista)
@@ -298,12 +305,10 @@ print("-----------------------------------------TIEMPOS DE ALGORITMO PLANIFICACI
 algoritmo3=prioridades_metod(lista_prioridad)
 mostrar_diagrama(algoritmo3, "Planificación basada en prioridades")
 tiempo_espera(algoritmo3)
-tiempo_respuesta(algoritmo3) '''
+tiempo_respuesta(algoritmo3)
 
 print("-----------------------------------------TIEMPOS DE ALGORITMO ROUND ROBIN(TURNO ROTATIVO)-------------------------------------")
 algoritmo4=round_robin()
-mostrar_diagrama(algoritmo4,"Round-Robin")
-tiempo_espera(algoritmo4)
-tiempo_respuesta(algoritmo4)
+mostrar_diagramaRobin(algoritmo4,"Round-Robin")
 tiempoRespuestaRogbinhood()
 TiempoEsperaRoundRobin()
