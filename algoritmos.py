@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+SoloRoundRobinList=[]
+Tiempos_Iniciales=[]
 
 print ("ingrese la cantidad de procesos a realizar")
 lista=[]
@@ -8,6 +9,7 @@ TE= 0 #Tiempo espera de cada proceso
 TR = 0 #Tiempo respuesta de cada proceso
 lista_prioridad = []
 lista_duracion = []
+lista_proceso=[]
 
 while True:
     try:
@@ -18,6 +20,7 @@ while True:
 
 for i in range (1 , N+1) :
   NP= input(f"ingrese nombre proceso {i} \n >> ")
+  lista_proceso.append(NP)
   while True:
     try:
       DP= int(input(f"ingrese duración proceso {i} \n >> "))
@@ -210,17 +213,76 @@ def agregar_tarea(diagrama, t0, duracion, proceso, nombre,indice):
   gantt.text(x=(t0 + duracion/2), y=(altura_barras*lista_numeros[indice] + altura_barras/2), s=f"{nombre} ({duracion})", va='center', color='white')
 
 def mostrar_diagrama(lista, nombre_diagrama):
+  suma_doble_aux=0
+  suma_aux=0
+  SoloRoundRobinDic={}
   diagrama = crear_diagrama_vacio(lista, nombre_diagrama)
   '''Todos los procesos comienzan en 0, por tal motivo primero se agrega el primer proceso de la lista en t0 = 0'''
   agregar_tarea(diagrama, 0, lista[0]["Duracion_proceso"],lista[0]["Nombre_proceso"],lista[0]["Nombre_proceso"],0)
   suma = 0
+  SoloRoundRobinDic={"nombre" : (diagrama["procesos"][0]),
+                     "tiempo_final": lista[0]["Duracion_proceso"]}
+  InicialesRoundRobinDic={"nombre" : (diagrama["procesos"][0]),
+                     "tiempo_inicial": 0}
+  Tiempos_Iniciales.append(InicialesRoundRobinDic)
+  SoloRoundRobinList.append(SoloRoundRobinDic)
+  suma_aux= lista[0]["Duracion_proceso"]
   for i in range (1, len(lista)): #es decir que arranca desde la posicion 1 y va hasta N
     suma += lista[i-1]["Duracion_proceso"]
+    suma_doble_aux += lista[i]["Duracion_proceso"]
+    suma_aux += lista[i]["Duracion_proceso"]
+    InicialesRoundRobinDic={"nombre" : (diagrama["procesos"][i]),
+                        "tiempo_inicial":(suma_doble_aux)}
+    Tiempos_Iniciales.append(InicialesRoundRobinDic)
+    SoloRoundRobinDic={"nombre" : (diagrama["procesos"][i]),
+                        "tiempo_final":(suma_aux)}
+    SoloRoundRobinList.append(SoloRoundRobinDic)
+    ''' print("dictionary")
+    print(SoloRoundRobinList) '''
     agregar_tarea(diagrama, suma, lista[i]["Duracion_proceso"], lista[i]["Nombre_proceso"],lista[i]["Nombre_proceso"],i)
 
   plt.show()
+  
+def tiempoRespuestaRogbinhood():
+  banderita=False
+  sumatoria=0
+  inverseRobinList=SoloRoundRobinList.copy()
+  inverseRobinList.reverse()
+  for j in range (N):
+    banderita=False
+    i=0
+    while(banderita==False):
+      if(lista_proceso[j]==inverseRobinList[i]["nombre"]):
+            sumatoria+=inverseRobinList[i]["tiempo_final"]
+            banderita=True
+      i+=1
+  total=sumatoria/N
+  return total
+      
+def TiempoEsperaRoundRobin():
+  bandera=False
+  total=0
+  suma=0
+  for i in range (N):
+    bandera=False
+    #for j in range (len(Tiempos_Iniciales)):
+    j=i
+    for x in range (len(SoloRoundRobinList)):
+      if(SoloRoundRobinList[j]["nombre"] == lista_proceso[i] and Tiempos_Iniciales[x]["nombre"] == lista_proceso[i] and bandera==True):
+        aux=Tiempos_Iniciales[x]["tiempo_inicial"]-SoloRoundRobinList[j]["tiempo_final"]
+        if(aux>=0):    
+          suma+=aux
+          j=x
+      elif(SoloRoundRobinList[j]["nombre"] == lista_proceso[i] and Tiempos_Iniciales[x]["nombre"] == lista_proceso[i] and bandera==False):
+        suma += Tiempos_Iniciales[x]["tiempo_inicial"]
+        bandera=True
+  total=suma/N
+  print("totallllitsimo------")
+  print("Tiempo d")
+  print(total)
+  return (total)    
 
-print("-----------------------------------------TIEMPOS DE ALGORITMO FCFS (ORDEN DE LLEGADA)-----------------------------------------")
+'''print("-----------------------------------------TIEMPOS DE ALGORITMO FCFS (ORDEN DE LLEGADA)-----------------------------------------")
 mostrar_diagrama(lista, "FCFS (ORDEN DE LLEGADA)")
 tiempo_espera(lista)
 tiempo_respuesta(lista)
@@ -236,12 +298,12 @@ print("-----------------------------------------TIEMPOS DE ALGORITMO PLANIFICACI
 algoritmo3=prioridades_metod(lista_prioridad)
 mostrar_diagrama(algoritmo3, "Planificación basada en prioridades")
 tiempo_espera(algoritmo3)
-tiempo_respuesta(algoritmo3) 
+tiempo_respuesta(algoritmo3) '''
 
 print("-----------------------------------------TIEMPOS DE ALGORITMO ROUND ROBIN(TURNO ROTATIVO)-------------------------------------")
 algoritmo4=round_robin()
 mostrar_diagrama(algoritmo4,"Round-Robin")
 tiempo_espera(algoritmo4)
 tiempo_respuesta(algoritmo4)
-
-
+tiempoRespuestaRogbinhood()
+TiempoEsperaRoundRobin()
